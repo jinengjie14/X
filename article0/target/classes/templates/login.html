@@ -1,0 +1,109 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>登陆</title>
+<link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" href="../static/css/zhuche.css" th:href="@{/css/zhuche.css}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+<div class="container"style="padding-top: 65px;">
+  <div class="row">
+    <div class="col-sm-12">
+      <a href="index.html" th:href="@{/index}"><img src="../static/images/520.png" th:src="@{/images/520.png}"></a>
+      <font class="fase">有一个账户？ <font class="fased"><a href="#" style="color:#2b9cf2">签到</a></font></font>
+    </div>
+    <div class="col-sm-12 text-center">
+      <h2 class="oppre">登陆</h2>
+      
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-1">
+      <img src="..\static\images\bai.png" th:src="@{/images/bai.png}">
+    </div>
+    <div class="col-sm-5">
+      <div class="col-sm-5  col-sm-offset-2">
+      <form action="http://10.1.65.33:81/login" method="post">
+    <div class="form-group">
+    
+      <label class="control-label" for="email"></label>
+      <input placeholder="你的手机或者邮箱" class="form-control" name="account" id="account" type="email" >
+      <span class="error" data-error="account"></span>
+    </div>
+    <div class="form-group" style="  margin-bottom: 15px;">
+      <label class="control-label" for="password"></label>
+      <input placeholder="密码" class="form-control" name="password" id="password" type="password">
+      <span class="error" data-error="password"></span>
+    </div>
+    <div class="offset-base"></div>
+    <font><font>
+      <input type="button" name="submit" value="登录" class="btn btn-primary btn-block"></font></font>
+      </form>
+    </div>
+    </div>
+    <div class="col-sm-5 hidden-xs">
+      <!-- hidden xs表示在最小时候缩小至消失不见 -->
+        <img class="img-responsive center-block" src="../static/images/last.svg"  th:src="@{/images/last.svg}" alt="Profit">
+    </div>
+  </div>
+</div>
+
+<script src="../static/js/jquery-1.11.3.min.js" th:src="@{/js/jquery-1.11.3.min.js}"></script>
+<script src="../static/js/jquerysession.js" th:src="@{/js/jquerysession.js}"></script>
+<script type="text/javascript">
+	
+$(function(){
+		//异步表单提交
+	$(document).on("click", "[name='submit']", function(e) {
+        var form = $(this).parents("form");
+        var url = form.attr("action");
+        var data = form.serialize();
+        $("[data-error]").html("");
+        $.post(url, data, function(json){
+        	if(json.code==200) {
+        		var user = {
+       				"id":json.data.id,
+       				"account":json.data.account
+        		}
+        		$.post("/login", user, function(json){
+        			window.location.href = json;
+        		});
+        	} else if(json.code==412) {
+        		if(json.error != null) {
+        			$.each(json.error, function(field,message){
+           				var name = form.find("[data-error='" +field + "']");
+           				switch(message) {
+           				case "user.account.format.error" :
+           					message = "没有找到此账号";
+           					break;
+           				case "user.passwd.length.error" :
+           					message = "密码长度过短";
+           					break;
+           				case "user.passwd.isnull" :
+           					message = "密码不能为空";
+           					break;
+           				case "user.account.isnull" :
+           					message = "账号不能为空 ";
+           					break;
+           				}
+           				name.html(message);
+            		});
+        		}else {
+        			form.find("[data-error='password']").html("账号密码错误");
+        		}
+        	} else {
+        		form.find("[data-error='password']").html("账号或密码错误");
+        	}
+    	},"json");
+	});
+});
+</script>
+</body>
+
+</body>
+</html>

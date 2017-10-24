@@ -1,0 +1,103 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>register</title>
+<link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" href="../static/css/zhuche.css" th:href="@{/css/zhuche.css}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+<div class="container"style="padding-top: 65px;">
+  <div class="row">
+    <div class="col-sm-12">
+      <a href="index.html" th:href="@{/index}">
+      <img src="../static/images/520.png" th:src="@{/images/520.png}"></a>
+      <font class="fase"><a href="#" style="color: #999;">忘记密码？</a> <a href="login.html" th:href="@{/login}"><font class="fased"> 已有账号,点击登陆</font></a></font>
+    </div>                          
+    <div class="col-sm-12 text-center">
+      <h2 class="oppre">开始填写下面的信息。</h2>
+      
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-1">
+     <!--  <img src="images/bai.png"> -->
+    </div>
+    <div class="col-sm-5">
+      <div class="col-sm-5  col-sm-offset-2">
+      <form action="#" method="post" th:action="@{/register_auth}">
+    <div class="form-group">
+     
+      <label class="control-label" for="email"></label>
+      <input placeholder="输入手机或者邮箱" class="form-control" name="account" id="account" type="email" >
+      <span class="error" data-error="account"><span>
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="password"></label>
+      <input placeholder="输入6-16位密码" class="form-control" name="password" id="password" type="password"  style="  margin-bottom: 15px;" >
+       <span class="error" data-error="password"><span>
+    </div>
+<!--     <div class="form-group">
+      <label class="control-label" for="password"></label>
+      <input value="" placeholder="确认密码" class="form-control" name="cpassword" id="cpassword" type="password" >
+    </div> -->
+  <!--   <div class="form-group"style="margin-bottom: 15px;">
+      <label class="control-label" for="password"></label>
+      <input value="" placeholder="输入手机验证码" class="form-control" name="password" id="password" type="password" ><font>
+      <input type="submit" name="commit" value="点击获取手机验证码" class="btn btn-primary btn-block"style="margin-top: 10px;"></font>
+    </div> -->
+    <div class="offset-base"></div>
+    <font><font>
+      <input type="button" name="submit" value="点击注册" class="btn btn-primary btn-block"></font></font>
+      </form>
+    </div>
+    </div>
+    <div class="col-sm-5 hidden-xs">
+      <!-- hidden xs表示在最小时候缩小至消失不见 -->
+        <img class="img-responsive center-block" alt="Profit" src="../static/images/last.svg" th:src="@{/images/last.svg}">
+    </div>
+  </div>
+</div>
+</body>
+
+</body>
+<script src="../static/js/jquery-1.11.3.min.js" th:src="@{/js/jquery-1.11.3.min.js}"></script>
+<script type="text/javascript">
+	
+$(function(){
+		//异步表单提交
+	$(document).on("click", "[name='submit']", function(e) {
+        var form = $(this).parents("form");
+        var url = form.attr("action");
+        var data = form.serialize();
+        $("[data-error]").html("");
+        $.post(url, data, function(json){
+    		var result = 1;
+    		$.each(json, function(field,message){
+    			if(field !="tourl"){
+    				result = 2;	
+    				var name = form.find("[data-error='" +field + "']");
+    				if(name.length > 0){
+    				   name.html(message);
+    				   }else{
+    					  Messenger().post({
+    						  message: message,
+    						  type: 'error',
+    						  hideAfter :2,
+    						  showCloseButton:true
+    					  }) ;
+    				   }
+    			}
+    		});
+    		if(result == 1 && json.tourl !="")
+    			window.location.href = json.tourl;
+    		
+    	},"json");
+	});
+});
+</script>
+</html>
